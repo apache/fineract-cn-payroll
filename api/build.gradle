@@ -21,6 +21,10 @@ dependencies {
             [group: 'org.hibernate', name: 'hibernate-validator', version: versions.validator],
             [group: 'org.hibernate', name: 'hibernate-validator-annotation-processor', version: versions.validator]
     )
+
+    testCompile(
+            [group: 'io.mifos.core', name: 'test', version: versions.frameworktest],
+    )
 }
 
 publishing {
