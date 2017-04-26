@@ -30,6 +30,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SuppressWarnings("WeakerAccess")
 @Configuration
@@ -51,7 +53,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories({
     "io.mifos.template.service.internal.repository"
 })
-public class TemplateConfiguration {
+public class TemplateConfiguration extends WebMvcConfigurerAdapter {
 
   public TemplateConfiguration() {
     super();
@@ -60,5 +62,10 @@ public class TemplateConfiguration {
   @Bean(name = ServiceConstants.LOGGER_NAME)
   public Logger logger() {
     return LoggerFactory.getLogger(ServiceConstants.LOGGER_NAME);
+  }
+
+  @Override
+  public void configurePathMatch(final PathMatchConfigurer configurer) {
+    configurer.setUseSuffixPatternMatch(Boolean.FALSE);
   }
 }
