@@ -30,7 +30,9 @@ import org.junit.rules.TestRule;
  * initializing and de-initializing external resources.
  */
 public class SuiteTestEnvironment {
-  static final String APP_NAME = "template-v1";
+  static final String APP_VERSION = "1";
+  static final String APP_NAME = "template-v" + APP_VERSION;
+
   static final TestEnvironment testEnvironment = new TestEnvironment(APP_NAME);
   static final CassandraInitializer cassandraInitializer = new CassandraInitializer();
   static final MariaDBInitializer mariaDBInitializer = new MariaDBInitializer();

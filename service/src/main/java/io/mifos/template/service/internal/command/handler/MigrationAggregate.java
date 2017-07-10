@@ -19,6 +19,7 @@ import io.mifos.core.command.annotation.Aggregate;
 import io.mifos.core.command.annotation.CommandHandler;
 import io.mifos.core.command.annotation.CommandLogLevel;
 import io.mifos.core.command.annotation.EventEmitter;
+import io.mifos.core.lang.ApplicationName;
 import io.mifos.core.mariadb.domain.FlywayFactoryBean;
 import io.mifos.template.api.v1.events.EventConstants;
 import io.mifos.template.service.ServiceConstants;
@@ -39,15 +40,18 @@ public class MigrationAggregate {
   private final Logger logger;
   private final DataSource dataSource;
   private final FlywayFactoryBean flywayFactoryBean;
+  private final ApplicationName applicationName;
 
   @Autowired
   public MigrationAggregate(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
                             final DataSource dataSource,
-                            final FlywayFactoryBean flywayFactoryBean) {
+                            final FlywayFactoryBean flywayFactoryBean,
+                            final ApplicationName applicationName) {
     super();
     this.logger = logger;
     this.dataSource = dataSource;
     this.flywayFactoryBean = flywayFactoryBean;
+    this.applicationName = applicationName;
   }
 
   @CommandHandler(logStart = CommandLogLevel.INFO, logFinish = CommandLogLevel.INFO)
@@ -56,6 +60,6 @@ public class MigrationAggregate {
   public String initialize(final InitializeServiceCommand initializeServiceCommand) {
     this.logger.debug("Start service migration.");
     this.flywayFactoryBean.create(this.dataSource).migrate();
-    return EventConstants.INITIALIZE;
+    return this.applicationName.getVersionString();
   }
 }

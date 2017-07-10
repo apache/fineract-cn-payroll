@@ -103,7 +103,7 @@ public class TestSample extends SuiteTestEnvironment {
 
   public boolean waitForInitialize() {
     try {
-      return this.eventRecorder.wait(EventConstants.INITIALIZE, EventConstants.INITIALIZE);
+      return this.eventRecorder.wait(EventConstants.INITIALIZE, APP_VERSION);
     } catch (final InterruptedException e) {
       throw new IllegalStateException(e);
     }
