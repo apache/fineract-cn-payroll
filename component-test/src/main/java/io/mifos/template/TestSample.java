@@ -20,7 +20,7 @@ import io.mifos.core.api.context.AutoUserContext;
 import io.mifos.core.test.fixture.TenantDataStoreContextTestRule;
 import io.mifos.core.test.listener.EnableEventRecording;
 import io.mifos.core.test.listener.EventRecorder;
-import io.mifos.template.api.v1.EventConstants;
+import io.mifos.template.api.v1.events.EventConstants;
 import io.mifos.template.api.v1.client.TemplateManager;
 import io.mifos.template.api.v1.domain.Sample;
 import io.mifos.template.service.TemplateConfiguration;

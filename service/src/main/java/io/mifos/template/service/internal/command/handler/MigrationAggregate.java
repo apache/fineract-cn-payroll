@@ -17,9 +17,10 @@ package io.mifos.template.service.internal.command.handler;
 
 import io.mifos.core.command.annotation.Aggregate;
 import io.mifos.core.command.annotation.CommandHandler;
+import io.mifos.core.command.annotation.CommandLogLevel;
 import io.mifos.core.command.annotation.EventEmitter;
 import io.mifos.core.mariadb.domain.FlywayFactoryBean;
-import io.mifos.template.api.v1.EventConstants;
+import io.mifos.template.api.v1.events.EventConstants;
 import io.mifos.template.service.ServiceConstants;
 import io.mifos.template.service.internal.command.InitializeServiceCommand;
 import org.slf4j.Logger;

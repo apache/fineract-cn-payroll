@@ -18,7 +18,7 @@ package io.mifos.template.service.internal.command.handler;
 import io.mifos.core.command.annotation.Aggregate;
 import io.mifos.core.command.annotation.CommandHandler;
 import io.mifos.core.command.annotation.EventEmitter;
-import io.mifos.template.api.v1.EventConstants;
+import io.mifos.template.api.v1.events.EventConstants;
 import io.mifos.template.service.internal.command.SampleCommand;
 import io.mifos.template.service.internal.repository.SampleJpaEntity;
 import io.mifos.template.service.internal.repository.SampleJpaEntityRepository;
