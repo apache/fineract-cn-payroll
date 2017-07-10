@@ -29,4 +29,11 @@ public class SampleCommand {
   public Sample sample() {
     return this.sample;
   }
+
+  @Override
+  public String toString() {
+    return "SampleCommand{" +
+        "sample=" + sample.getIdentifier() +
+        '}';
+  }
 }

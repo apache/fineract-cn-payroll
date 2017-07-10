@@ -17,6 +17,7 @@ package io.mifos.template.service.internal.command.handler;
 
 import io.mifos.core.command.annotation.Aggregate;
 import io.mifos.core.command.annotation.CommandHandler;
+import io.mifos.core.command.annotation.CommandLogLevel;
 import io.mifos.core.command.annotation.EventEmitter;
 import io.mifos.template.api.v1.events.EventConstants;
 import io.mifos.template.service.internal.command.SampleCommand;
@@ -37,7 +38,19 @@ public class SampleAggregate {
     this.sampleJpaEntityRepository = sampleJpaEntityRepository;
   }
 
-  @CommandHandler
+  //TODO: Think about your command handler logging, then delete this comment.
+  // The log levels provided in the command handler cause log messages to be emitted each time this
+  // command handler is called before and after the call. Before the call, the command is logged
+  // using its toString() method, and after the call, the emitted event is logged via its toString()
+  // method.
+  //
+  // If you wish to adjust the information in the log messages, do so via the toString() methods.
+  // Financial transactions, passwords, and customer address data are examples of information which
+  // should not be placed in the logs.
+  //
+  // If a command handler should not emit a log message, change logStart and logFinish to:
+  // CommandLogLevel.NONE.
+  @CommandHandler(logStart = CommandLogLevel.INFO, logFinish = CommandLogLevel.INFO)
   @Transactional
   @EventEmitter(selectorName = EventConstants.SELECTOR_NAME, selectorValue = EventConstants.POST_SAMPLE)
   public String sample(final SampleCommand sampleCommand) {

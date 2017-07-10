@@ -50,7 +50,7 @@ public class MigrationAggregate {
     this.flywayFactoryBean = flywayFactoryBean;
   }
 
-  @CommandHandler
+  @CommandHandler(logStart = CommandLogLevel.INFO, logFinish = CommandLogLevel.INFO)
   @Transactional
   @EventEmitter(selectorName = EventConstants.SELECTOR_NAME, selectorValue = EventConstants.INITIALIZE)
   public String initialize(final InitializeServiceCommand initializeServiceCommand) {
