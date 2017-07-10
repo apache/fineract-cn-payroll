@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.mifos.template.api.v1;
+package io.mifos.template;
 
-@SuppressWarnings("unused")
-public interface EventConstants {
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-  String DESTINATION = "template-v1";
-  String SELECTOR_NAME = "action";
-  String INITIALIZE = "initialize";
-  String POST_SAMPLE = "post-sample";
-  String SELECTOR_INITIALIZE = SELECTOR_NAME + " = '" + INITIALIZE + "'";
-  String SELECTOR_POST_SAMPLE = SELECTOR_NAME + " = '" + POST_SAMPLE + "'";
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+    TestSample.class,
+    //TODO: when you create a new component test, add it here so you can run it with the suite.
+})
+public class TestSuite extends SuiteTestEnvironment {
 }

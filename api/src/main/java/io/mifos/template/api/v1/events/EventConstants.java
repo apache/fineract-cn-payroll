@@ -13,27 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.mifos.template.service.internal.command;
+package io.mifos.template.api.v1.events;
 
-import io.mifos.template.api.v1.domain.Sample;
+@SuppressWarnings("unused")
+public interface EventConstants {
 
-public class SampleCommand {
-
-  private final Sample sample;
-
-  public SampleCommand(final Sample sample) {
-    super();
-    this.sample = sample;
-  }
-
-  public Sample sample() {
-    return this.sample;
-  }
-
-  @Override
-  public String toString() {
-    return "SampleCommand{" +
-        "sample=" + sample.getIdentifier() +
-        '}';
-  }
+  String DESTINATION = "template-v1";
+  String SELECTOR_NAME = "action";
+  String INITIALIZE = "initialize";
+  String POST_SAMPLE = "post-sample";
+  String SELECTOR_INITIALIZE = SELECTOR_NAME + " = '" + INITIALIZE + "'";
+  String SELECTOR_POST_SAMPLE = SELECTOR_NAME + " = '" + POST_SAMPLE + "'";
 }
