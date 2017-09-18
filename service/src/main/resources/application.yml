@@ -28,7 +28,7 @@ eureka:
 
 server:
   port: 8081
-  contextPath: /template/v1/*
+  contextPath: /payroll/v1/*
 
 cassandra:
   clusterName: staging_cluster

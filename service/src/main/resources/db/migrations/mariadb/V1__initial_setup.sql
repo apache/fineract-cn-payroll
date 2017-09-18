@@ -14,9 +14,45 @@
 -- limitations under the License.
 --
 
-CREATE TABLE template_samples (
-  id BIGINT NOT NULL AUTO_INCREMENT,
-  identifier VARCHAR(8) NOT NULL,
-  payload VARCHAR(512) NULL,
-  CONSTRAINT template_samples_pk PRIMARY KEY (id)
+CREATE TABLE meketre_payroll_configurations (
+  id                  BIGINT       NOT NULL AUTO_INCREMENT,
+  customer_identifier VARCHAR(32)  NOT NULL,
+  main_account_number VARCHAR(34)  NOT NULL,
+  created_by          VARCHAR(32)  NOT NULL,
+  created_on          TIMESTAMP(3) NOT NULL,
+  last_modified_by    VARCHAR(32)  NULL,
+  last_modified_on    TIMESTAMP(3) NULL,
+  CONSTRAINT meketre_payroll_config_pk PRIMARY KEY (id),
+  CONSTRAINT meketre_payroll_config_acct_uq UNIQUE (customer_identifier, main_account_number)
+);
+
+CREATE TABLE meketre_payroll_allocations (
+  id                       BIGINT        NOT NULL AUTO_INCREMENT,
+  payroll_configuration_id BIGINT        NOT NULL,
+  account_number           VARCHAR(34)   NOT NULL,
+  amount                   NUMERIC(15,5) NOT NULL,
+  proportional             BOOLEAN       NOT NULL,
+  CONSTRAINT meketre_payroll_allocations_pk PRIMARY KEY (id),
+  CONSTRAINT meketre_payroll_alloc_acct_uq UNIQUE (payroll_configuration_id, account_number),
+  CONSTRAINT meketre_payroll_alloc_config_fk FOREIGN KEY (payroll_configuration_id) REFERENCES meketre_payroll_configurations (id)
+);
+
+CREATE TABLE meketre_payroll_collections (
+  id                    BIGINT       NOT NULL AUTO_INCREMENT,
+  identifier            VARCHAR(32)  NOT NULL,
+  source_account_number VARCHAR(34)  NOT NULL,
+  created_by            VARCHAR(32)  NOT NULL,
+  created_on            TIMESTAMP(3) NOT NULL,
+  CONSTRAINT meketre_payroll_collections_pk PRIMARY KEY (id),
+  CONSTRAINT meketre_pay_col_identifier_uq UNIQUE (identifier)
+);
+
+CREATE TABLE meketre_payroll_payments (
+  id                    BIGINT        NOT NULL AUTO_INCREMENT,
+  payroll_collection_id BIGINT        NOT NULL,
+  customer_identifier   VARCHAR(32)   NOT NULL,
+  employer              VARCHAR(256)  NOT NULL,
+  salary                NUMERIC(15,5) NOT NULL,
+  CONSTRAINT meketre_payroll_payments_pk PRIMARY KEY (id),
+  CONSTRAINT meketre_payroll_pay_coll_fk FOREIGN KEY (payroll_collection_id) REFERENCES meketre_payroll_collections (id)
 );

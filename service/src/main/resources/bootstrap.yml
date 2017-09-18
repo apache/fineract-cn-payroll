@@ -16,4 +16,4 @@
 
 spring:
     application:
-        name: template-v1
+        name: payroll-v1

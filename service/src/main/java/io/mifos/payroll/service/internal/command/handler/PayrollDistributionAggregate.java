@@ -1,0 +1,96 @@
+/*
+ * Copyright 2017 The Mifos Initiative.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.mifos.payroll.service.internal.command.handler;
+
+import io.mifos.core.api.util.UserContextHolder;
+import io.mifos.core.command.annotation.Aggregate;
+import io.mifos.core.command.annotation.CommandHandler;
+import io.mifos.core.command.annotation.EventEmitter;
+import io.mifos.payroll.api.v1.EventConstants;
+import io.mifos.payroll.api.v1.domain.PayrollCollectionSheet;
+import io.mifos.payroll.service.ServiceConstants;
+import io.mifos.payroll.service.internal.command.DistributePayrollCommand;
+import io.mifos.payroll.service.internal.repository.PayrollCollectionEntity;
+import io.mifos.payroll.service.internal.repository.PayrollCollectionRepository;
+import io.mifos.payroll.service.internal.repository.PayrollPaymentEntity;
+import io.mifos.payroll.service.internal.repository.PayrollPaymentRepository;
+import io.mifos.payroll.service.internal.service.PayrollConfigurationService;
+import io.mifos.payroll.service.internal.service.adaptor.AccountingAdaptor;
+import org.apache.commons.lang.RandomStringUtils;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Clock;
+import java.time.LocalDateTime;
+
+@Aggregate
+public class PayrollDistributionAggregate {
+
+  private final Logger logger;
+  private final PayrollConfigurationService payrollConfigurationService;
+  private final PayrollCollectionRepository payrollCollectionRepository;
+  private final PayrollPaymentRepository payrollPaymentRepository;
+  private final AccountingAdaptor accountingAdaptor;
+
+  @Autowired
+  public PayrollDistributionAggregate(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
+                                      PayrollConfigurationService payrollConfigurationService,
+                                      final PayrollCollectionRepository payrollCollectionRepository,
+                                      final PayrollPaymentRepository payrollPaymentRepository,
+                                      final AccountingAdaptor accountingAdaptor) {
+    super();
+    this.logger = logger;
+    this.payrollConfigurationService = payrollConfigurationService;
+    this.payrollCollectionRepository = payrollCollectionRepository;
+    this.payrollPaymentRepository = payrollPaymentRepository;
+    this.accountingAdaptor = accountingAdaptor;
+  }
+
+  @Transactional
+  @CommandHandler
+  @EventEmitter(selectorName = EventConstants.SELECTOR_NAME, selectorValue = EventConstants.POST_DISTRIBUTION)
+  public String process(final DistributePayrollCommand distributePayrollCommand) {
+    final PayrollCollectionSheet payrollCollectionSheet = distributePayrollCommand.payrollCollectionSheet();
+
+    final PayrollCollectionEntity payrollCollectionEntity = new PayrollCollectionEntity();
+    payrollCollectionEntity.setIdentifier(RandomStringUtils.randomAlphanumeric(32));
+    payrollCollectionEntity.setSourceAccountNumber(payrollCollectionSheet.getSourceAccountNumber());
+    payrollCollectionEntity.setCreatedBy(UserContextHolder.checkedGetUser());
+    payrollCollectionEntity.setCreatedOn(LocalDateTime.now(Clock.systemUTC()));
+
+    final PayrollCollectionEntity savedPayrollCollectionEntity = this.payrollCollectionRepository.save(payrollCollectionEntity);
+
+    payrollCollectionSheet.getPayrollPayments().forEach(payrollPayment ->
+        this.payrollConfigurationService
+            .findPayrollConfiguration(payrollPayment.getCustomerIdentifier())
+            .ifPresent(payrollConfiguration -> {
+          final PayrollPaymentEntity payrollPaymentEntity = new PayrollPaymentEntity();
+          payrollPaymentEntity.setPayrollCollection(savedPayrollCollectionEntity);
+          payrollPaymentEntity.setCustomerIdentifier(payrollPayment.getCustomerIdentifier());
+          payrollPaymentEntity.setEmployer(payrollPayment.getEmployer());
+          payrollPaymentEntity.setSalary(payrollPayment.getSalary());
+
+          this.payrollPaymentRepository.save(payrollPaymentEntity);
+
+          this.accountingAdaptor.postPayrollPayment(savedPayrollCollectionEntity, payrollPayment, payrollConfiguration);
+        })
+    );
+
+    return payrollCollectionSheet.getSourceAccountNumber();
+  }
+}

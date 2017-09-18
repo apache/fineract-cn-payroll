@@ -1,49 +1,6 @@
-# Mifos I/O Template
+# Mifos I/O Payroll
 
-[![Join the chat at https://gitter.im/mifos-initiative/mifos.io](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mifos-initiative/mifos.io?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-This project provides a template layout for all Mifos I/O microservices.
-
-## Abstract
-Mifos I/O is an application framework for digital financial services, a system to support nationwide and cross-national financial transactions and help to level and speed the creation of an inclusive, interconnected digital economy for every nation in the world.
-
-## Steps needed to turn the template project into a real project
-
-1.  Git clone template into {project name} folder
-
-        git clone https://github.com/mifosio/template.git {project name}
-
-2.  Delete _.git_
-
-        rm -rf .git
-    
-3.  Open settings.gradle and replace value of _rootProject.name_ with {project name}
-
-4.  Open root build.gradle and replace value of _version_ with 0.1.0-snapshot
-
-6.  Create Gradle wrapper
-
-        gradle wrapper
-
-6.  Open all module specific build.gradle files (api, service, and component-test) and replace value of _group_ with io.mifos.{project name}
-
-7.  Import project into IDE
-
-8.  Rename all io.mifos.template packages to io.mifos.{project name}
-
-9.  Open _SampleRestConfiguration_ and _SampleServiceConfiguration_, adjust @ComponentScan to reflect the new package name
-
-10. Open _application.yml_ and replace _server.contextPath_ with /{project name}/v1/*
-
-11. Open _bootstrap.yml_ and replace _spring.application.name_ with {project name}/v1/
-
-12. Open _SampleTest_ and replace constructor argument of TestEnvironment in line 80 with {project name}/v1/
-
-13. Run _SampleTest_
-
-14. Replace the contents of the README with text describing your new project.
-
-15. Happy coding! ; o) 
+This project provides functionality to configure payroll allocations and distribute payroll payments for customers.
 
 ## Versioning
 The version numbers follow the [Semantic Versioning](http://semver.org/) scheme.

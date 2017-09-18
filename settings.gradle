@@ -1,4 +1,4 @@
-rootProject.name = 'template'
+rootProject.name = 'payroll'
 
 includeBuild 'api'
 includeBuild 'service'
