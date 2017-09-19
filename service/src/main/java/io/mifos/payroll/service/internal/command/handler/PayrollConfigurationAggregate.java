@@ -73,6 +73,8 @@ public class PayrollConfigurationAggregate {
       payrollConfigurationEntity = optionalPayrollConfiguration.get();
       this.payrollAllocationRepository.deleteByPayrollConfiguration(payrollConfigurationEntity);
 
+      this.payrollAllocationRepository.flush();
+
       payrollConfigurationEntity.setLastModifiedBy(UserContextHolder.checkedGetUser());
       payrollConfigurationEntity.setLastModifiedOn(LocalDateTime.now(Clock.systemUTC()));
     } else {

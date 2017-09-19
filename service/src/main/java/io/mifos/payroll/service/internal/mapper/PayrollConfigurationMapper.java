@@ -28,7 +28,7 @@ public class PayrollConfigurationMapper {
   public static PayrollConfiguration map(final PayrollConfigurationEntity payrollConfigurationEntity) {
     final PayrollConfiguration payrollConfiguration = new PayrollConfiguration();
     payrollConfiguration.setMainAccountNumber(payrollConfigurationEntity.getMainAccountNumber());
-    payrollConfiguration.setCreatedBy(payrollConfiguration.getCreatedOn());
+    payrollConfiguration.setCreatedBy(payrollConfigurationEntity.getCreatedBy());
     payrollConfiguration.setCreatedOn(DateConverter.toIsoString(payrollConfigurationEntity.getCreatedOn()));
     if (payrollConfigurationEntity.getLastModifiedBy() != null) {
       payrollConfiguration.setLastModifiedBy(payrollConfigurationEntity.getLastModifiedBy());
