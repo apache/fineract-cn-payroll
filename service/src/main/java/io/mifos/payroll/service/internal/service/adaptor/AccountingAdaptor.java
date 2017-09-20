@@ -57,14 +57,17 @@ public class AccountingAdaptor {
 
   public Optional<Account> findAccount(final String accountIdentifier) {
     try {
-      return Optional.of(this.ledgerManager.findAccount(accountIdentifier));
+      final Account account = this.ledgerManager.findAccount(accountIdentifier);
+      if (account.getState().equals(Account.State.OPEN.name())) {
+        return Optional.of(account);
+      }
     } catch (final AccountNotFoundException anfex) {
       this.logger.warn("Account {} not found.", accountIdentifier);
-      return Optional.empty();
     }
+    return Optional.empty();
   }
 
-  public void postPayrollPayment(final PayrollCollectionEntity payrollCollectionEntity,
+  public Optional<String> postPayrollPayment(final PayrollCollectionEntity payrollCollectionEntity,
                                  final PayrollPayment payrollPayment,
                                  final PayrollConfiguration payrollConfiguration) {
 
@@ -102,11 +105,23 @@ public class AccountingAdaptor {
     final BigDecimal currentCreditorSum =
         BigDecimal.valueOf(creditors.stream().mapToDouble(value -> Double.valueOf(value.getAmount())).sum());
 
-    final Creditor mainCreditor = new Creditor();
-    mainCreditor.setAccountNumber(payrollConfiguration.getMainAccountNumber());
-    mainCreditor.setAmount(payrollPayment.getSalary().subtract(currentCreditorSum).toString());
-    creditors.add(mainCreditor);
+    final int comparedValue = currentCreditorSum.compareTo(payrollPayment.getSalary());
+    if (comparedValue > 0) {
+      return Optional.of("Allocated amount would exceed posted salary.");
+    }
+    if (comparedValue < 0) {
+      final Creditor mainCreditor = new Creditor();
+      mainCreditor.setAccountNumber(payrollConfiguration.getMainAccountNumber());
+      mainCreditor.setAmount(payrollPayment.getSalary().subtract(currentCreditorSum).toString());
+      creditors.add(mainCreditor);
+    }
 
-    this.ledgerManager.createJournalEntry(journalEntry);
+    try {
+      this.ledgerManager.createJournalEntry(journalEntry);
+      return Optional.empty();
+    } catch (final Throwable th) {
+      this.logger.warn("Could not process journal entry for customer {}.", payrollPayment.getCustomerIdentifier(), th);
+      return Optional.of("Error while processing journal entry.");
+    }
   }
 }

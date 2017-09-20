@@ -32,6 +32,8 @@ public class PayrollPayment {
   @DecimalMin("0.001")
   @DecimalMax("9999999999.99999")
   private BigDecimal salary;
+  private Boolean processed;
+  private String message;
 
   public PayrollPayment() {
     super();
@@ -59,5 +61,21 @@ public class PayrollPayment {
 
   public void setSalary(final BigDecimal salary) {
     this.salary = salary;
+  }
+
+  public Boolean getProcessed() {
+    return this.processed;
+  }
+
+  public void setProcessed(final Boolean processed) {
+    this.processed = processed;
+  }
+
+  public String getMessage() {
+    return this.message;
+  }
+
+  public void setMessage(final String message) {
+    this.message = message;
   }
 }

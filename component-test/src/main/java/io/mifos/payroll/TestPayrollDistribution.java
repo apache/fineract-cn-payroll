@@ -25,6 +25,7 @@ import io.mifos.payroll.api.v1.domain.PayrollConfiguration;
 import io.mifos.payroll.api.v1.domain.PayrollPayment;
 import io.mifos.payroll.api.v1.domain.PayrollPaymentPage;
 import io.mifos.payroll.domain.DomainObjectGenerator;
+import io.mifos.payroll.service.internal.repository.PayrollCollectionEntity;
 import io.mifos.payroll.service.internal.service.adaptor.AccountingAdaptor;
 import io.mifos.payroll.service.internal.service.adaptor.CustomerAdaptor;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -70,6 +71,14 @@ public class TestPayrollDistribution extends AbstractPayrollTest {
         .doAnswer(invocation -> Optional.of(new Account()))
         .when(this.accountingAdaptorSpy).findAccount(Matchers.eq(payrollCollectionSheet.getSourceAccountNumber()));
 
+    Mockito
+        .doAnswer(invocation -> Optional.empty())
+        .when(this.accountingAdaptorSpy).postPayrollPayment(
+            Matchers.any(PayrollCollectionEntity.class),
+            Matchers.refEq(payrollPayment),
+            Matchers.any(PayrollConfiguration.class)
+        );
+
     super.testSubject.distribute(payrollCollectionSheet);
     Assert.assertTrue(super.eventRecorder.wait(EventConstants.POST_DISTRIBUTION, payrollCollectionSheet.getSourceAccountNumber()));
 
@@ -80,6 +89,9 @@ public class TestPayrollDistribution extends AbstractPayrollTest {
     final PayrollPaymentPage payrollPaymentPage =
         super.testSubject.fetchPayments(payrollCollectionHistory.getIdentifier(), 0, 10, null, null);
     Assert.assertEquals(Long.valueOf(1L), payrollPaymentPage.getTotalElements());
+
+    final PayrollPayment fetchedPayrollPayment = payrollPaymentPage.getPayrollPayments().get(0);
+    Assert.assertTrue(fetchedPayrollPayment.getProcessed());
   }
 
   private void prepareMocks(final String customerIdentifier, final PayrollConfiguration payrollConfiguration) {
