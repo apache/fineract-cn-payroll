@@ -29,6 +29,8 @@ public class PayrollPaymentMapper {
     payrollPayment.setCustomerIdentifier(payrollPaymentEntity.getCustomerIdentifier());
     payrollPayment.setEmployer(payrollPaymentEntity.getEmployer());
     payrollPayment.setSalary(payrollPaymentEntity.getSalary());
+    payrollPayment.setProcessed(payrollPaymentEntity.getProcessed());
+    payrollPayment.setMessage(payrollPaymentEntity.getMessage());
     return payrollPayment;
   }
 }

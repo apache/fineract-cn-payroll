@@ -21,6 +21,7 @@ import io.mifos.anubis.annotation.Permittables;
 import io.mifos.core.command.gateway.CommandGateway;
 import io.mifos.core.lang.ServiceException;
 import io.mifos.payroll.api.v1.PermittableGroupIds;
+import io.mifos.payroll.api.v1.domain.PayrollAllocation;
 import io.mifos.payroll.api.v1.domain.PayrollConfiguration;
 import io.mifos.payroll.service.ServiceConstants;
 import io.mifos.payroll.service.internal.command.PutPayrollConfigurationCommand;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/customers/{identifier}/payroll")
@@ -73,19 +75,25 @@ public class PayrollConfigurationRestController {
   public ResponseEntity<Void> setPayrollConfiguration(@PathVariable(value = "identifier") final String customerIdentifier,
                                                      @RequestBody @Valid final PayrollConfiguration payrollConfiguration) {
     this.payrollConfigurationService.findCustomer(customerIdentifier)
-        .orElseThrow(() -> ServiceException.notFound("Customer {0} not found.", customerIdentifier)
+        .orElseThrow(() -> ServiceException.notFound("Customer {0} not available.", customerIdentifier)
     );
 
     this.payrollConfigurationService.findAccount(payrollConfiguration.getMainAccountNumber())
-        .orElseThrow(() -> ServiceException.notFound("Main account {0} not found.", payrollConfiguration.getMainAccountNumber()));
+        .orElseThrow(() -> ServiceException.notFound("Main account {0} not available.", payrollConfiguration.getMainAccountNumber()));
 
-    if (payrollConfiguration.getPayrollAllocations() != null
-        && payrollConfiguration.getPayrollAllocations()
-        .stream()
-        .filter(payrollAllocation ->
-          !this.payrollConfigurationService.findAccount(payrollAllocation.getAccountNumber()).isPresent()
-        ).count() > 0L) {
-      throw ServiceException.notFound("Certain allocated accounts not found.");
+    if (payrollConfiguration.getPayrollAllocations() != null) {
+
+      final Set<PayrollAllocation> payrollAllocations = payrollConfiguration.getPayrollAllocations();
+
+      if (payrollAllocations.stream().anyMatch(payrollAllocation ->
+          payrollAllocation.getAccountNumber().equals(payrollConfiguration.getMainAccountNumber()))) {
+        throw ServiceException.conflict("Main account should not be used in allocations.");
+      }
+
+      if (payrollAllocations.stream().anyMatch(payrollAllocation ->
+          !this.payrollConfigurationService.findAccount(payrollAllocation.getAccountNumber()).isPresent())) {
+        throw ServiceException.notFound("Certain allocated accounts not available.");
+      }
     }
 
     this.commandGateway.process(new PutPayrollConfigurationCommand(customerIdentifier, payrollConfiguration));

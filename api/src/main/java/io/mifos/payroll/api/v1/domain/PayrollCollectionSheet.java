@@ -16,16 +16,16 @@
 package io.mifos.payroll.api.v1.domain;
 
 import io.mifos.core.lang.validation.constraints.ValidIdentifier;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class PayrollCollectionSheet {
 
   @ValidIdentifier(maxLength = 34)
   private String sourceAccountNumber;
-  @NotNull
+  @NotEmpty
   @Valid
   private List<PayrollPayment> payrollPayments;
 

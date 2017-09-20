@@ -72,7 +72,6 @@ public class PayrollConfigurationAggregate {
     if (optionalPayrollConfiguration.isPresent()) {
       payrollConfigurationEntity = optionalPayrollConfiguration.get();
       this.payrollAllocationRepository.deleteByPayrollConfiguration(payrollConfigurationEntity);
-
       this.payrollAllocationRepository.flush();
 
       payrollConfigurationEntity.setLastModifiedBy(UserContextHolder.checkedGetUser());

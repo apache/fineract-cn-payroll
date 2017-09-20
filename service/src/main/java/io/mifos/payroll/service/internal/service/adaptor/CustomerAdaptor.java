@@ -42,10 +42,13 @@ public class CustomerAdaptor {
 
   public Optional<Customer> findCustomer(final String customerIdentifier) {
     try {
-      return Optional.of(this.customerManager.findCustomer(customerIdentifier));
+      final Customer customer = this.customerManager.findCustomer(customerIdentifier);
+      if (customer.getCurrentState().equals(Customer.State.ACTIVE.name())) {
+        return Optional.of(customer);
+      }
     } catch (final CustomerNotFoundException cnfex) {
       this.logger.warn("Customer {} not found.", customerIdentifier);
-      return Optional.empty();
     }
+    return Optional.empty();
   }
 }

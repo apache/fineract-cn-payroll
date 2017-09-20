@@ -82,17 +82,12 @@ public class PayrollDistributionRestController {
   public ResponseEntity<Void> distribute(@RequestBody @Valid final PayrollCollectionSheet payrollCollectionSheet) {
 
     this.payrollConfigurationService.findAccount(payrollCollectionSheet.getSourceAccountNumber())
-        .orElseThrow(() -> ServiceException.notFound("Account {0} not found.", payrollCollectionSheet.getSourceAccountNumber()));
+        .orElseThrow(() -> ServiceException.notFound("Account {0} not available.", payrollCollectionSheet.getSourceAccountNumber()));
 
     if (payrollCollectionSheet.getPayrollPayments()
-        .stream()
-        .filter(
-            payrollPayment -> !this.payrollConfigurationService
-                .findPayrollConfiguration(payrollPayment.getCustomerIdentifier())
-                .isPresent()
-        )
-        .count() > 0L) {
-      throw ServiceException.conflict("Missing payroll configuration for certain customers.");
+        .stream().anyMatch(payrollPayment ->
+              !this.payrollConfigurationService.findPayrollConfiguration(payrollPayment.getCustomerIdentifier()).isPresent())) {
+      throw ServiceException.conflict("Payroll configuration for certain customers not available.");
     }
 
     this.commandGateway.process(new DistributePayrollCommand(payrollCollectionSheet));

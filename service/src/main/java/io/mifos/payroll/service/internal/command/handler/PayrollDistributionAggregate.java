@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Aggregate
 public class PayrollDistributionAggregate {
@@ -79,16 +80,22 @@ public class PayrollDistributionAggregate {
         this.payrollConfigurationService
             .findPayrollConfiguration(payrollPayment.getCustomerIdentifier())
             .ifPresent(payrollConfiguration -> {
-          final PayrollPaymentEntity payrollPaymentEntity = new PayrollPaymentEntity();
-          payrollPaymentEntity.setPayrollCollection(savedPayrollCollectionEntity);
-          payrollPaymentEntity.setCustomerIdentifier(payrollPayment.getCustomerIdentifier());
-          payrollPaymentEntity.setEmployer(payrollPayment.getEmployer());
-          payrollPaymentEntity.setSalary(payrollPayment.getSalary());
+              final PayrollPaymentEntity payrollPaymentEntity = new PayrollPaymentEntity();
+              payrollPaymentEntity.setPayrollCollection(savedPayrollCollectionEntity);
+              payrollPaymentEntity.setCustomerIdentifier(payrollPayment.getCustomerIdentifier());
+              payrollPaymentEntity.setEmployer(payrollPayment.getEmployer());
+              payrollPaymentEntity.setSalary(payrollPayment.getSalary());
 
-          this.payrollPaymentRepository.save(payrollPaymentEntity);
-
-          this.accountingAdaptor.postPayrollPayment(savedPayrollCollectionEntity, payrollPayment, payrollConfiguration);
-        })
+              final Optional<String> optionalErrorMessage =
+                  this.accountingAdaptor.postPayrollPayment(savedPayrollCollectionEntity, payrollPayment, payrollConfiguration);
+              if (optionalErrorMessage.isPresent()) {
+                payrollPaymentEntity.setMessage(optionalErrorMessage.get());
+                payrollPaymentEntity.setProcessed(Boolean.FALSE);
+              } else {
+                payrollPaymentEntity.setProcessed(Boolean.TRUE);
+              }
+              this.payrollPaymentRepository.save(payrollPaymentEntity);
+            })
     );
 
     return payrollCollectionSheet.getSourceAccountNumber();
