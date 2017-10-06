@@ -19,6 +19,8 @@ import com.google.common.collect.Lists;
 import io.mifos.accounting.api.v1.domain.Account;
 import io.mifos.customer.api.v1.domain.Customer;
 import io.mifos.payroll.api.v1.EventConstants;
+import io.mifos.payroll.api.v1.client.PayrollPaymentValidationException;
+import io.mifos.payroll.api.v1.domain.PayrollAllocation;
 import io.mifos.payroll.api.v1.domain.PayrollCollectionHistory;
 import io.mifos.payroll.api.v1.domain.PayrollCollectionSheet;
 import io.mifos.payroll.api.v1.domain.PayrollConfiguration;
@@ -67,17 +69,19 @@ public class TestPayrollDistribution extends AbstractPayrollTest {
     payrollPayment.setSalary(BigDecimal.valueOf(1234.56D));
     payrollCollectionSheet.setPayrollPayments(Lists.newArrayList(payrollPayment));
 
+    final Account sourceAccount = new Account();
+    sourceAccount.setState(Account.State.OPEN.name());
     Mockito
-        .doAnswer(invocation -> Optional.of(new Account()))
+        .doAnswer(invocation -> Optional.of(sourceAccount))
         .when(this.accountingAdaptorSpy).findAccount(Matchers.eq(payrollCollectionSheet.getSourceAccountNumber()));
 
     Mockito
         .doAnswer(invocation -> Optional.empty())
         .when(this.accountingAdaptorSpy).postPayrollPayment(
-            Matchers.any(PayrollCollectionEntity.class),
-            Matchers.refEq(payrollPayment),
-            Matchers.any(PayrollConfiguration.class)
-        );
+        Matchers.any(PayrollCollectionEntity.class),
+        Matchers.refEq(payrollPayment),
+        Matchers.any(PayrollConfiguration.class)
+    );
 
     super.testSubject.distribute(payrollCollectionSheet);
     Assert.assertTrue(super.eventRecorder.wait(EventConstants.POST_DISTRIBUTION, payrollCollectionSheet.getSourceAccountNumber()));
@@ -94,20 +98,103 @@ public class TestPayrollDistribution extends AbstractPayrollTest {
     Assert.assertTrue(fetchedPayrollPayment.getProcessed());
   }
 
+  @Test(expected = PayrollPaymentValidationException.class)
+  public void shouldNotDistributePaymentsAllocatedAccountClosed() throws Exception {
+    final String customerIdentifier = RandomStringUtils.randomAlphanumeric(32);
+    final PayrollConfiguration payrollConfiguration = DomainObjectGenerator.getPayrollConfiguration();
+    this.prepareMocks(customerIdentifier, payrollConfiguration);
+
+    final PayrollAllocation invalidPayrollAllocation = new PayrollAllocation();
+    invalidPayrollAllocation.setAccountNumber(RandomStringUtils.randomAlphanumeric(34));
+    invalidPayrollAllocation.setProportional(Boolean.FALSE);
+    invalidPayrollAllocation.setAmount(BigDecimal.valueOf(200.00D));
+    payrollConfiguration.getPayrollAllocations().add(invalidPayrollAllocation);
+
+    final Account invalidPayrollAccount = new Account();
+    invalidPayrollAccount.setState(Account.State.CLOSED.name());
+    Mockito
+        .doAnswer(invocation -> Optional.of(invalidPayrollAccount))
+        .when(this.accountingAdaptorSpy).findAccount(Matchers.eq(invalidPayrollAllocation.getAccountNumber()));
+
+    super.testSubject.setPayrollConfiguration(customerIdentifier, payrollConfiguration);
+    Assert.assertTrue(super.eventRecorder.wait(EventConstants.PUT_CONFIGURATION, customerIdentifier));
+
+    final PayrollCollectionSheet payrollCollectionSheet = new PayrollCollectionSheet();
+    payrollCollectionSheet.setSourceAccountNumber(RandomStringUtils.randomAlphanumeric(34));
+    final PayrollPayment payrollPayment = new PayrollPayment();
+    payrollPayment.setCustomerIdentifier(customerIdentifier);
+    payrollPayment.setEmployer("ACME, Inc.");
+    payrollPayment.setSalary(BigDecimal.valueOf(1234.56D));
+    payrollCollectionSheet.setPayrollPayments(Lists.newArrayList(payrollPayment));
+
+    final Account sourceAccount = new Account();
+    sourceAccount.setState(Account.State.OPEN.name());
+    Mockito
+        .doAnswer(invocation -> Optional.of(sourceAccount))
+        .when(this.accountingAdaptorSpy).findAccount(Matchers.eq(payrollCollectionSheet.getSourceAccountNumber()));
+
+    Mockito
+        .doAnswer(invocation -> Optional.empty())
+        .when(this.accountingAdaptorSpy).postPayrollPayment(
+        Matchers.any(PayrollCollectionEntity.class),
+        Matchers.refEq(payrollPayment),
+        Matchers.any(PayrollConfiguration.class)
+    );
+
+    super.testSubject.distribute(payrollCollectionSheet);
+  }
+
+  @Test(expected = PayrollPaymentValidationException.class)
+  public void shouldNotDistributePaymentsSourceAccountClosed() throws Exception {
+    final String customerIdentifier = RandomStringUtils.randomAlphanumeric(32);
+    final PayrollConfiguration payrollConfiguration = DomainObjectGenerator.getPayrollConfiguration();
+    this.prepareMocks(customerIdentifier, payrollConfiguration);
+
+    super.testSubject.setPayrollConfiguration(customerIdentifier, payrollConfiguration);
+    Assert.assertTrue(super.eventRecorder.wait(EventConstants.PUT_CONFIGURATION, customerIdentifier));
+
+    final PayrollCollectionSheet payrollCollectionSheet = new PayrollCollectionSheet();
+    payrollCollectionSheet.setSourceAccountNumber(RandomStringUtils.randomAlphanumeric(34));
+    final PayrollPayment payrollPayment = new PayrollPayment();
+    payrollPayment.setCustomerIdentifier(customerIdentifier);
+    payrollPayment.setEmployer("ACME, Inc.");
+    payrollPayment.setSalary(BigDecimal.valueOf(1234.56D));
+    payrollCollectionSheet.setPayrollPayments(Lists.newArrayList(payrollPayment));
+
+    final Account sourceAccount = new Account();
+    sourceAccount.setState(Account.State.CLOSED.name());
+    Mockito
+        .doAnswer(invocation -> Optional.of(sourceAccount))
+        .when(this.accountingAdaptorSpy).findAccount(Matchers.eq(payrollCollectionSheet.getSourceAccountNumber()));
+
+    Mockito
+        .doAnswer(invocation -> Optional.empty())
+        .when(this.accountingAdaptorSpy).postPayrollPayment(
+        Matchers.any(PayrollCollectionEntity.class),
+        Matchers.refEq(payrollPayment),
+        Matchers.any(PayrollConfiguration.class)
+    );
+
+    super.testSubject.distribute(payrollCollectionSheet);
+  }
+
   private void prepareMocks(final String customerIdentifier, final PayrollConfiguration payrollConfiguration) {
     Mockito
         .doAnswer(invocation -> Optional.of(new Customer()))
         .when(this.customerAdaptorSpy).findCustomer(Matchers.eq(customerIdentifier));
 
+    final Account mainAccount = new Account();
+    mainAccount.setState(Account.State.OPEN.name());
     Mockito
-        .doAnswer(invocation -> Optional.of(new Account()))
+        .doAnswer(invocation -> Optional.of(mainAccount))
         .when(this.accountingAdaptorSpy).findAccount(Matchers.eq(payrollConfiguration.getMainAccountNumber()));
 
-    payrollConfiguration.getPayrollAllocations().forEach(payrollAllocation ->
-        Mockito
-            .doAnswer(invocation -> Optional.of(new Account()))
-            .when(this.accountingAdaptorSpy).findAccount(Matchers.eq(payrollAllocation.getAccountNumber()))
-    );
+    payrollConfiguration.getPayrollAllocations().forEach(payrollAllocation -> {
+      final Account allocatedAccount = new Account();
+      allocatedAccount.setState(Account.State.OPEN.name());
+      Mockito
+          .doAnswer(invocation -> Optional.of(allocatedAccount))
+          .when(this.accountingAdaptorSpy).findAccount(Matchers.eq(payrollAllocation.getAccountNumber()));
+    });
   }
-
 }

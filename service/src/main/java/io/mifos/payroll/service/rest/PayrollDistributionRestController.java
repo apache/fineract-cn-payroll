@@ -15,6 +15,7 @@
  */
 package io.mifos.payroll.service.rest;
 
+import io.mifos.accounting.api.v1.domain.Account;
 import io.mifos.anubis.annotation.AcceptedTokenType;
 import io.mifos.anubis.annotation.Permittable;
 import io.mifos.anubis.annotation.Permittables;
@@ -23,11 +24,13 @@ import io.mifos.core.lang.ServiceException;
 import io.mifos.payroll.api.v1.PermittableGroupIds;
 import io.mifos.payroll.api.v1.domain.PayrollCollectionHistory;
 import io.mifos.payroll.api.v1.domain.PayrollCollectionSheet;
+import io.mifos.payroll.api.v1.domain.PayrollConfiguration;
 import io.mifos.payroll.api.v1.domain.PayrollPaymentPage;
 import io.mifos.payroll.service.ServiceConstants;
 import io.mifos.payroll.service.internal.command.DistributePayrollCommand;
 import io.mifos.payroll.service.internal.service.PayrollConfigurationService;
 import io.mifos.payroll.service.internal.service.PayrollDistributionService;
+import io.mifos.payroll.service.internal.service.adaptor.AccountingAdaptor;
 import io.mifos.payroll.service.rest.util.PageableBuilder;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,17 +56,20 @@ public class PayrollDistributionRestController {
   private final CommandGateway commandGateway;
   private final PayrollDistributionService payrollDistributionService;
   private final PayrollConfigurationService payrollConfigurationService;
+  private final AccountingAdaptor accountingAdaptor;
 
   @Autowired
   public PayrollDistributionRestController(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
                                            final CommandGateway commandGateway,
                                            final PayrollDistributionService payrollDistributionService,
-                                           final PayrollConfigurationService payrollConfigurationService) {
+                                           final PayrollConfigurationService payrollConfigurationService,
+                                           final AccountingAdaptor accountingAdaptor) {
     super();
     this.logger = logger;
     this.commandGateway = commandGateway;
     this.payrollDistributionService = payrollDistributionService;
     this.payrollConfigurationService = payrollConfigurationService;
+    this.accountingAdaptor = accountingAdaptor;
   }
 
   @Permittables({
@@ -81,14 +87,17 @@ public class PayrollDistributionRestController {
   @ResponseBody
   public ResponseEntity<Void> distribute(@RequestBody @Valid final PayrollCollectionSheet payrollCollectionSheet) {
 
-    this.payrollConfigurationService.findAccount(payrollCollectionSheet.getSourceAccountNumber())
-        .orElseThrow(() -> ServiceException.notFound("Account {0} not available.", payrollCollectionSheet.getSourceAccountNumber()));
+    this.verifyAccount(payrollCollectionSheet.getSourceAccountNumber());
+    payrollCollectionSheet.getPayrollPayments()
+        .forEach(payrollPayment -> {
+          final PayrollConfiguration payrollConfiguration =
+              this.payrollConfigurationService.findPayrollConfiguration(payrollPayment.getCustomerIdentifier())
+                  .orElseThrow(() -> ServiceException.conflict("Payroll configuration for certain customers not available."));
 
-    if (payrollCollectionSheet.getPayrollPayments()
-        .stream().anyMatch(payrollPayment ->
-              !this.payrollConfigurationService.findPayrollConfiguration(payrollPayment.getCustomerIdentifier()).isPresent())) {
-      throw ServiceException.conflict("Payroll configuration for certain customers not available.");
-    }
+          this.verifyAccount(payrollConfiguration.getMainAccountNumber());
+          payrollConfiguration.getPayrollAllocations()
+              .forEach(payrollAllocation -> this.verifyAccount(payrollAllocation.getAccountNumber()));
+        });
 
     this.commandGateway.process(new DistributePayrollCommand(payrollCollectionSheet));
 
@@ -137,5 +146,15 @@ public class PayrollDistributionRestController {
 
     return ResponseEntity.ok(this.payrollDistributionService
         .fetchPayments(identifier, PageableBuilder.create(pageIndex, size, sortColumn, sortDirection)));
+  }
+
+  private void verifyAccount(final String accountIdentifier) {
+    final Account account = this.accountingAdaptor.findAccount(accountIdentifier).orElseThrow(
+        () -> ServiceException.conflict("Account {0} not found.")
+    );
+
+    if (!account.getState().equals(Account.State.OPEN.name())) {
+      throw ServiceException.conflict("Account {0} must be open.", accountIdentifier);
+    }
   }
 }

@@ -69,7 +69,8 @@ public interface PayrollManager {
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
   @ThrowsExceptions({
-      @ThrowsException(status = HttpStatus.BAD_REQUEST, exception = PayrollPaymentValidationException.class)
+      @ThrowsException(status = HttpStatus.BAD_REQUEST, exception = PayrollPaymentValidationException.class),
+      @ThrowsException(status = HttpStatus.CONFLICT, exception = PayrollPaymentValidationException.class)
   })
   void distribute(@RequestBody @Valid final PayrollCollectionSheet payrollCollectionSheet);
 
