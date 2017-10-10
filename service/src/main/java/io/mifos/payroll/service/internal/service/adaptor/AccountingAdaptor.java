@@ -71,7 +71,8 @@ public class AccountingAdaptor {
                                  final PayrollPayment payrollPayment,
                                  final PayrollConfiguration payrollConfiguration) {
 
-    final MathContext mathContext = new MathContext(2, RoundingMode.HALF_EVEN);
+    final MathContext mathContextAmount = new MathContext(2, RoundingMode.HALF_EVEN);
+    final MathContext mathContextPercentage = new MathContext(5, RoundingMode.HALF_EVEN);
 
     final JournalEntry journalEntry = new JournalEntry();
     journalEntry.setTransactionIdentifier(UUID.randomUUID().toString());
@@ -95,8 +96,8 @@ public class AccountingAdaptor {
         allocationCreditor.setAmount(payrollAllocation.getAmount().toString());
       } else {
         final BigDecimal value = payrollPayment.getSalary().multiply(
-            payrollAllocation.getAmount().divide(BigDecimal.valueOf(100.00D), mathContext)
-        ).round(mathContext);
+            payrollAllocation.getAmount().divide(BigDecimal.valueOf(100.00D), mathContextPercentage)
+        ).round(mathContextAmount);
         allocationCreditor.setAmount(value.toString());
       }
       creditors.add(allocationCreditor);
