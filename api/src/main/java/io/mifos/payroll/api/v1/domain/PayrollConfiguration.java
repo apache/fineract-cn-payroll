@@ -18,15 +18,15 @@ package io.mifos.payroll.api.v1.domain;
 import io.mifos.core.lang.validation.constraints.ValidIdentifier;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PayrollConfiguration {
 
   @ValidIdentifier(maxLength = 34)
   private String mainAccountNumber;
   @Valid
-  private Set<PayrollAllocation> payrollAllocations = new HashSet<>();
+  private List<PayrollAllocation> payrollAllocations = new ArrayList<>();
   private String createdBy;
   private String createdOn;
   private String lastModifiedBy;
@@ -44,11 +44,11 @@ public class PayrollConfiguration {
     this.mainAccountNumber = mainAccountNumber;
   }
 
-  public Set<PayrollAllocation> getPayrollAllocations() {
+  public List<PayrollAllocation> getPayrollAllocations() {
     return this.payrollAllocations;
   }
 
-  public void setPayrollAllocations(final Set<PayrollAllocation> payrollAllocations) {
+  public void setPayrollAllocations(final List<PayrollAllocation> payrollAllocations) {
     this.payrollAllocations = payrollAllocations;
   }
 

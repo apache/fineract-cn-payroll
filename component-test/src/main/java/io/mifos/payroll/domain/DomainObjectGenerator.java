@@ -20,7 +20,7 @@ import io.mifos.payroll.api.v1.domain.PayrollConfiguration;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public class DomainObjectGenerator {
 
@@ -32,7 +32,7 @@ public class DomainObjectGenerator {
     final PayrollConfiguration payrollConfiguration = new PayrollConfiguration();
     payrollConfiguration.setMainAccountNumber(RandomStringUtils.randomAlphanumeric(34));
 
-    final HashSet<PayrollAllocation> payrollAllocations = new HashSet<>();
+    final ArrayList<PayrollAllocation> payrollAllocations = new ArrayList<>();
     payrollConfiguration.setPayrollAllocations(payrollAllocations);
 
     final PayrollAllocation savingsAllocation = new PayrollAllocation();
