@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/customers/{identifier}/payroll")
@@ -83,7 +83,7 @@ public class PayrollConfigurationRestController {
 
     if (payrollConfiguration.getPayrollAllocations() != null) {
 
-      final Set<PayrollAllocation> payrollAllocations = payrollConfiguration.getPayrollAllocations();
+      final List<PayrollAllocation> payrollAllocations = payrollConfiguration.getPayrollAllocations();
 
       if (payrollAllocations.stream().anyMatch(payrollAllocation ->
           payrollAllocation.getAccountNumber().equals(payrollConfiguration.getMainAccountNumber()))) {

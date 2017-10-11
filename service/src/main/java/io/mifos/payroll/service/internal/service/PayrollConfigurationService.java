@@ -17,6 +17,7 @@ package io.mifos.payroll.service.internal.service;
 
 import io.mifos.accounting.api.v1.domain.Account;
 import io.mifos.customer.api.v1.domain.Customer;
+import io.mifos.payroll.api.v1.domain.PayrollAllocation;
 import io.mifos.payroll.api.v1.domain.PayrollConfiguration;
 import io.mifos.payroll.service.ServiceConstants;
 import io.mifos.payroll.service.internal.mapper.PayrollAllocationMapper;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -74,7 +76,8 @@ public class PayrollConfigurationService {
               this.payrollAllocationRepository.findByPayrollConfiguration(payrollConfigurationEntity)
                   .stream()
                   .map(PayrollAllocationMapper::map)
-              .collect(Collectors.toSet())
+                  .sorted(Comparator.comparing(PayrollAllocation::getAccountNumber))
+              .collect(Collectors.toList())
           );
 
           return payrollConfiguration;

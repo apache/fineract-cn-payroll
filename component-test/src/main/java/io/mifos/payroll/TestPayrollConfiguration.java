@@ -15,7 +15,7 @@
  */
 package io.mifos.payroll;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import io.mifos.accounting.api.v1.domain.Account;
 import io.mifos.customer.api.v1.domain.Customer;
 import io.mifos.payroll.api.v1.EventConstants;
@@ -65,7 +65,7 @@ public class TestPayrollConfiguration extends AbstractPayrollTest {
     Assert.assertTrue(super.eventRecorder.wait(EventConstants.PUT_CONFIGURATION, customerIdentifier));
 
     final PayrollAllocation newPayrollAllocation = new PayrollAllocation();
-    payrollConfiguration.setPayrollAllocations(Sets.newHashSet(newPayrollAllocation));
+    payrollConfiguration.setPayrollAllocations(Lists.newArrayList(newPayrollAllocation));
     newPayrollAllocation.setAccountNumber(RandomStringUtils.randomAlphanumeric(34));
     newPayrollAllocation.setAmount(BigDecimal.valueOf(15.00D));
     newPayrollAllocation.setProportional(Boolean.FALSE);
