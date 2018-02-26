@@ -1,4 +1,4 @@
-group 'io.mifos.payroll'
+group 'org.apache.fineract.cn.payroll'
 version '0.1.0-BUILD-SNAPSHOT'
 
 ext.versions = [
