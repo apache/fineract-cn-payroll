@@ -1,4 +1,4 @@
-# Mifos I/O Payroll
+# Apache Fineract CN Payroll
 
 This project provides functionality to configure payroll allocations and distribute payroll payments for customers.
 
