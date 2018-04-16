@@ -19,23 +19,22 @@
 package io.mifos.payroll;
 
 import com.google.common.collect.Lists;
-import io.mifos.accounting.api.v1.domain.Account;
-import io.mifos.customer.api.v1.domain.Customer;
 import io.mifos.payroll.api.v1.EventConstants;
 import io.mifos.payroll.api.v1.domain.PayrollAllocation;
 import io.mifos.payroll.api.v1.domain.PayrollConfiguration;
 import io.mifos.payroll.domain.DomainObjectGenerator;
 import io.mifos.payroll.service.internal.service.adaptor.AccountingAdaptor;
 import io.mifos.payroll.service.internal.service.adaptor.CustomerAdaptor;
+import java.math.BigDecimal;
+import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.fineract.cn.accounting.api.v1.domain.Account;
+import org.apache.fineract.cn.customer.api.v1.domain.Customer;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import java.math.BigDecimal;
-import java.util.Optional;
 
 public class TestPayrollConfiguration extends AbstractPayrollTest {
 

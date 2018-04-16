@@ -18,8 +18,7 @@
  */
 package io.mifos.payroll.service.internal.repository;
 
-import io.mifos.core.mariadb.util.LocalDateTimeConverter;
-
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -27,7 +26,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+import org.apache.fineract.cn.mariadb.util.LocalDateTimeConverter;
 
 @Entity
 @Table(name = "meketre_payroll_collections")

@@ -19,22 +19,10 @@
 package io.mifos.payroll.service.internal.service.adaptor;
 
 import com.google.common.collect.Sets;
-import io.mifos.accounting.api.v1.client.AccountNotFoundException;
-import io.mifos.accounting.api.v1.client.LedgerManager;
-import io.mifos.accounting.api.v1.domain.Account;
-import io.mifos.accounting.api.v1.domain.Creditor;
-import io.mifos.accounting.api.v1.domain.Debtor;
-import io.mifos.accounting.api.v1.domain.JournalEntry;
-import io.mifos.core.lang.DateConverter;
 import io.mifos.payroll.api.v1.domain.PayrollConfiguration;
 import io.mifos.payroll.api.v1.domain.PayrollPayment;
 import io.mifos.payroll.service.ServiceConstants;
 import io.mifos.payroll.service.internal.repository.PayrollCollectionEntity;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -43,6 +31,17 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
+import org.apache.fineract.cn.accounting.api.v1.client.AccountNotFoundException;
+import org.apache.fineract.cn.accounting.api.v1.client.LedgerManager;
+import org.apache.fineract.cn.accounting.api.v1.domain.Account;
+import org.apache.fineract.cn.accounting.api.v1.domain.Creditor;
+import org.apache.fineract.cn.accounting.api.v1.domain.Debtor;
+import org.apache.fineract.cn.accounting.api.v1.domain.JournalEntry;
+import org.apache.fineract.cn.lang.DateConverter;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AccountingAdaptor {

@@ -18,11 +18,10 @@
  */
 package io.mifos.payroll.api.v1.domain;
 
-import io.mifos.core.lang.validation.constraints.ValidIdentifier;
-
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.Valid;
+import org.apache.fineract.cn.lang.validation.constraints.ValidIdentifier;
 
 public class PayrollConfiguration {
 

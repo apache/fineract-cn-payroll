@@ -18,9 +18,9 @@
  */
 package io.mifos.payroll.service.internal.mapper;
 
-import io.mifos.core.lang.DateConverter;
 import io.mifos.payroll.api.v1.domain.PayrollConfiguration;
 import io.mifos.payroll.service.internal.repository.PayrollConfigurationEntity;
+import org.apache.fineract.cn.lang.DateConverter;
 
 public class PayrollConfigurationMapper {
 

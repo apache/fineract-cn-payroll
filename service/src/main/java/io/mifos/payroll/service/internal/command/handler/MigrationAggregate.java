@@ -18,17 +18,16 @@
  */
 package io.mifos.payroll.service.internal.command.handler;
 
-import io.mifos.accounting.api.v1.EventConstants;
-import io.mifos.core.command.annotation.Aggregate;
-import io.mifos.core.command.annotation.CommandHandler;
-import io.mifos.core.command.annotation.EventEmitter;
-import io.mifos.core.lang.ApplicationName;
-import io.mifos.core.mariadb.domain.FlywayFactoryBean;
 import io.mifos.payroll.service.internal.command.MigrateServiceCommand;
+import javax.sql.DataSource;
+import org.apache.fineract.cn.accounting.api.v1.EventConstants;
+import org.apache.fineract.cn.command.annotation.Aggregate;
+import org.apache.fineract.cn.command.annotation.CommandHandler;
+import org.apache.fineract.cn.command.annotation.EventEmitter;
+import org.apache.fineract.cn.lang.ApplicationName;
+import org.apache.fineract.cn.mariadb.domain.FlywayFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.sql.DataSource;
 
 @Aggregate
 public class MigrationAggregate {

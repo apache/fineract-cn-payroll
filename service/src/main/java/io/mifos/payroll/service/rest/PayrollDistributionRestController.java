@@ -18,12 +18,6 @@
  */
 package io.mifos.payroll.service.rest;
 
-import io.mifos.accounting.api.v1.domain.Account;
-import io.mifos.anubis.annotation.AcceptedTokenType;
-import io.mifos.anubis.annotation.Permittable;
-import io.mifos.anubis.annotation.Permittables;
-import io.mifos.core.command.gateway.CommandGateway;
-import io.mifos.core.lang.ServiceException;
 import io.mifos.payroll.api.v1.PermittableGroupIds;
 import io.mifos.payroll.api.v1.domain.PayrollCollectionHistory;
 import io.mifos.payroll.api.v1.domain.PayrollCollectionSheet;
@@ -35,6 +29,14 @@ import io.mifos.payroll.service.internal.service.PayrollConfigurationService;
 import io.mifos.payroll.service.internal.service.PayrollDistributionService;
 import io.mifos.payroll.service.internal.service.adaptor.AccountingAdaptor;
 import io.mifos.payroll.service.rest.util.PageableBuilder;
+import java.util.List;
+import javax.validation.Valid;
+import org.apache.fineract.cn.accounting.api.v1.domain.Account;
+import org.apache.fineract.cn.anubis.annotation.AcceptedTokenType;
+import org.apache.fineract.cn.anubis.annotation.Permittable;
+import org.apache.fineract.cn.anubis.annotation.Permittables;
+import org.apache.fineract.cn.command.gateway.CommandGateway;
+import org.apache.fineract.cn.lang.ServiceException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,9 +49,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/distribution")

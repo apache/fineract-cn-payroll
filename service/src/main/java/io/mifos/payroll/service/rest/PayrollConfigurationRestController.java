@@ -18,17 +18,19 @@
  */
 package io.mifos.payroll.service.rest;
 
-import io.mifos.anubis.annotation.AcceptedTokenType;
-import io.mifos.anubis.annotation.Permittable;
-import io.mifos.anubis.annotation.Permittables;
-import io.mifos.core.command.gateway.CommandGateway;
-import io.mifos.core.lang.ServiceException;
 import io.mifos.payroll.api.v1.PermittableGroupIds;
 import io.mifos.payroll.api.v1.domain.PayrollAllocation;
 import io.mifos.payroll.api.v1.domain.PayrollConfiguration;
 import io.mifos.payroll.service.ServiceConstants;
 import io.mifos.payroll.service.internal.command.PutPayrollConfigurationCommand;
 import io.mifos.payroll.service.internal.service.PayrollConfigurationService;
+import java.util.List;
+import javax.validation.Valid;
+import org.apache.fineract.cn.anubis.annotation.AcceptedTokenType;
+import org.apache.fineract.cn.anubis.annotation.Permittable;
+import org.apache.fineract.cn.anubis.annotation.Permittables;
+import org.apache.fineract.cn.command.gateway.CommandGateway;
+import org.apache.fineract.cn.lang.ServiceException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,9 +42,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/customers/{identifier}/payroll")
@@ -78,7 +77,8 @@ public class PayrollConfigurationRestController {
   public ResponseEntity<Void> setPayrollConfiguration(@PathVariable(value = "identifier") final String customerIdentifier,
                                                      @RequestBody @Valid final PayrollConfiguration payrollConfiguration) {
     this.payrollConfigurationService.findCustomer(customerIdentifier)
-        .orElseThrow(() -> ServiceException.notFound("Customer {0} not available.", customerIdentifier)
+        .orElseThrow(() -> ServiceException
+            .notFound("Customer {0} not available.", customerIdentifier)
     );
 
     this.payrollConfigurationService.findAccount(payrollConfiguration.getMainAccountNumber())

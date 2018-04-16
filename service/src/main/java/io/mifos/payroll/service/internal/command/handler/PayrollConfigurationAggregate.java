@@ -18,10 +18,6 @@
  */
 package io.mifos.payroll.service.internal.command.handler;
 
-import io.mifos.core.api.util.UserContextHolder;
-import io.mifos.core.command.annotation.Aggregate;
-import io.mifos.core.command.annotation.CommandHandler;
-import io.mifos.core.command.annotation.EventEmitter;
 import io.mifos.payroll.api.v1.EventConstants;
 import io.mifos.payroll.api.v1.domain.PayrollConfiguration;
 import io.mifos.payroll.service.ServiceConstants;
@@ -32,14 +28,17 @@ import io.mifos.payroll.service.internal.repository.PayrollAllocationRepository;
 import io.mifos.payroll.service.internal.repository.PayrollConfigurationEntity;
 import io.mifos.payroll.service.internal.repository.PayrollConfigurationRepository;
 import io.mifos.payroll.service.internal.service.PayrollConfigurationService;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import org.apache.fineract.cn.api.util.UserContextHolder;
+import org.apache.fineract.cn.command.annotation.Aggregate;
+import org.apache.fineract.cn.command.annotation.CommandHandler;
+import org.apache.fineract.cn.command.annotation.EventEmitter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Clock;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Aggregate
 public class PayrollConfigurationAggregate {

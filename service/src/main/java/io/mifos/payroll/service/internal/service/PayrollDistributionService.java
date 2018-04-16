@@ -18,8 +18,6 @@
  */
 package io.mifos.payroll.service.internal.service;
 
-import io.mifos.core.lang.DateConverter;
-import io.mifos.core.lang.ServiceException;
 import io.mifos.payroll.api.v1.domain.PayrollCollectionHistory;
 import io.mifos.payroll.api.v1.domain.PayrollPaymentPage;
 import io.mifos.payroll.service.ServiceConstants;
@@ -29,16 +27,17 @@ import io.mifos.payroll.service.internal.repository.PayrollCollectionRepository;
 import io.mifos.payroll.service.internal.repository.PayrollPaymentEntity;
 import io.mifos.payroll.service.internal.repository.PayrollPaymentRepository;
 import io.mifos.payroll.service.internal.service.adaptor.AccountingAdaptor;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.apache.fineract.cn.lang.DateConverter;
+import org.apache.fineract.cn.lang.ServiceException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PayrollDistributionService {

@@ -18,9 +18,8 @@
  */
 package io.mifos.payroll.api.v1.domain;
 
-import io.mifos.core.lang.validation.constraints.ValidIdentifier;
-
 import javax.validation.constraints.NotNull;
+import org.apache.fineract.cn.lang.validation.constraints.ValidIdentifier;
 
 public class PayrollCollectionHistory {
 

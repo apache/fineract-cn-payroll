@@ -18,8 +18,6 @@
  */
 package io.mifos.payroll.service.internal.service;
 
-import io.mifos.accounting.api.v1.domain.Account;
-import io.mifos.customer.api.v1.domain.Customer;
 import io.mifos.payroll.api.v1.domain.PayrollAllocation;
 import io.mifos.payroll.api.v1.domain.PayrollConfiguration;
 import io.mifos.payroll.service.ServiceConstants;
@@ -29,14 +27,15 @@ import io.mifos.payroll.service.internal.repository.PayrollAllocationRepository;
 import io.mifos.payroll.service.internal.repository.PayrollConfigurationRepository;
 import io.mifos.payroll.service.internal.service.adaptor.AccountingAdaptor;
 import io.mifos.payroll.service.internal.service.adaptor.CustomerAdaptor;
+import java.util.Comparator;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.apache.fineract.cn.accounting.api.v1.domain.Account;
+import org.apache.fineract.cn.customer.api.v1.domain.Customer;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PayrollConfigurationService {
