@@ -1,0 +1,10 @@
+[source,http,options="nowrap"]
+----
+POST /payroll/v1/customers/wwiP1hjgY4urDKHZZmE7K7Pbwr5OV9J3/payroll HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: localhost:8080
+Content-Length: 32
+
+wwiP1hjgY4urDKHZZmE7K7Pbwr5OV9J3
+----
