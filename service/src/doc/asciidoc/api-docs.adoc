@@ -1,0 +1,31 @@
+== Apache Fineract CN Payroll Management API Documentation ==
+
+== Payroll Configurations ==
+
+==== Configure Payroll Distribution ====
+
+.curl-request
+include::{snippets}/test-configurations/should-create-payroll-distribution/curl-request.adoc[]
+
+.http-request
+include::{snippets}/test-configurations/should-create-payroll-distribution/http-request.adoc[]
+
+.http-response
+include::{snippets}/test-configurations/should-create-payroll-distribution/http-response.adoc[]
+
+.httpie-request
+include::{snippets}/test-configurations/should-create-payroll-distribution/httpie-request.adoc[]
+
+==== Update Payroll Distribution ====
+
+.curl-request
+include::{snippets}/test-configurations/should-update-payroll-distribution/curl-request.adoc[]
+
+.http-request
+include::{snippets}/test-configurations/should-update-payroll-distribution/http-request.adoc[]
+
+.http-response
+include::{snippets}/test-configurations/should-update-payroll-distribution/http-response.adoc[]
+
+.httpie-request
+include::{snippets}/test-configurations/should-update-payroll-distribution/httpie-request.adoc[]

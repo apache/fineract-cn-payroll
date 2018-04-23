@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/payroll/v1/customers/wwiP1hjgY4urDKHZZmE7K7Pbwr5OV9J3/payroll' -i -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' -d 'wwiP1hjgY4urDKHZZmE7K7Pbwr5OV9J3'
+----

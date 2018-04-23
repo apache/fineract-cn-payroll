@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ http PUT 'http://localhost:8080/payroll/v1/customers/WhfpMOMifcLw4XIoImryT51O75wTyfVa/payroll/org.apache.fineract.cn.payroll.api.v1.domain.PayrollConfiguration@42c661d4' 'Accept:application/json' 'Content-Type:application/json'
+----
