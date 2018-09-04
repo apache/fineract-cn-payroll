@@ -26,6 +26,7 @@ buildscript {
 
     dependencies {
         classpath ("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
     }
 }
 
@@ -34,6 +35,7 @@ plugins {
     id("org.nosphere.apache.rat") version "0.3.1"
 }
 apply from: '../shared.gradle'
+apply plugin: 'org.asciidoctor.convert'
 
 dependencies {
     compile(
@@ -43,8 +45,17 @@ dependencies {
             [group: 'org.apache.fineract.cn', name: 'api', version: versions.frameworkapi],
             [group: 'org.apache.fineract.cn', name: 'test', version: versions.frameworktest],
             [group: 'org.apache.fineract.cn', name: 'lang', version: versions.frameworklang],
-            [group: 'org.springframework.boot', name: 'spring-boot-starter-test']
+            [group: 'org.springframework.boot', name: 'spring-boot-starter-test'],
+            [group: 'org.springframework.restdocs', name: 'spring-restdocs-mockmvc'],
+            [group: 'junit', name: 'junit', version: '4.12']
     )
+}
+
+asciidoctor {
+    sourceDir 'build/doc/asciidoc/'
+    outputDir 'build/doc/html5'
+    options backend: "html", doctype: "book"
+    attributes "source-highlighter": "highlightjs", 'snippets': file('build/doc/generated-snippets/')
 }
 
 publishing {
