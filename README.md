@@ -1,4 +1,4 @@
-# Apache Fineract CN Payroll
+# Apache Fineract CN Payroll [![Build Status](https://api.travis-ci.com/apache/fineract-cn-payroll.svg?branch=develop)](https://travis-ci.com/apache/fineract-cn-payroll)
 
 This project provides functionality to configure payroll allocations and distribute payroll payments for customers.
 
