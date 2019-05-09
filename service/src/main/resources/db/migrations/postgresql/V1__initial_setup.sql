@@ -18,7 +18,7 @@
 --
 
 CREATE TABLE meketre_payroll_configurations (
-  id                  BIGINT       NOT NULL AUTO_INCREMENT,
+  id                  BIGSERIAL    NOT NULL,
   customer_identifier VARCHAR(32)  NOT NULL,
   main_account_number VARCHAR(34)  NOT NULL,
   created_by          VARCHAR(32)  NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE meketre_payroll_configurations (
 );
 
 CREATE TABLE meketre_payroll_allocations (
-  id                       BIGINT        NOT NULL AUTO_INCREMENT,
+  id                       BIGSERIAL     NOT NULL,
   payroll_configuration_id BIGINT        NOT NULL,
   account_number           VARCHAR(34)   NOT NULL,
   amount                   NUMERIC(15,5) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE meketre_payroll_allocations (
 );
 
 CREATE TABLE meketre_payroll_collections (
-  id                    BIGINT       NOT NULL AUTO_INCREMENT,
+  id                    BIGSERIAL    NOT NULL,
   identifier            VARCHAR(32)  NOT NULL,
   source_account_number VARCHAR(34)  NOT NULL,
   created_by            VARCHAR(32)  NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE meketre_payroll_collections (
 );
 
 CREATE TABLE meketre_payroll_payments (
-  id                    BIGINT        NOT NULL AUTO_INCREMENT,
+  id                    BIGSERIAL     NOT NULL,
   payroll_collection_id BIGINT        NOT NULL,
   customer_identifier   VARCHAR(32)   NOT NULL,
   employer              VARCHAR(256)  NOT NULL,
