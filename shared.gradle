@@ -115,4 +115,5 @@ rat {
             "README.md",
             "**/.dockerignore/**"
     ]
+    plainOutput = true
 }
