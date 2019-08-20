@@ -31,6 +31,6 @@ ENV server.max-http-header-size=16384 \
     server.port=$payroll_port
 
 WORKDIR /tmp
-COPY --from=builder /builddir/service/build/libs/service-boot-0.1.0-BUILD-SNAPSHOT.jar ./payroll-service-boot.jar
+COPY --from=builder /builddir/service/build/libs/service-0.1.0-BUILD-SNAPSHOT-boot.jar ./payroll-service-boot.jar
 
 CMD ["java", "-jar", "payroll-service-boot.jar"]
