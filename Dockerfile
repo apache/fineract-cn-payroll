@@ -16,7 +16,13 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-FROM openjdk:8-jdk-alpine
+FROM openjdk:8-jdk-alpine AS builder
+RUN mkdir builddir
+COPY . builddir
+WORKDIR builddir
+RUN ./gradlew publishToMavenLocal
+
+FROM openjdk:8-jdk-alpine AS runner
 
 ARG payroll_port=2030
 
@@ -25,6 +31,6 @@ ENV server.max-http-header-size=16384 \
     server.port=$payroll_port
 
 WORKDIR /tmp
-COPY payroll-service-boot-0.1.0-BUILD-SNAPSHOT.jar .
+COPY --from=builder /builddir/service/build/libs/service-0.1.0-BUILD-SNAPSHOT-boot.jar ./payroll-service-boot.jar
 
-CMD ["java", "-jar", "payroll-service-boot-0.1.0-BUILD-SNAPSHOT.jar"]
+CMD ["java", "-jar", "payroll-service-boot.jar"]
