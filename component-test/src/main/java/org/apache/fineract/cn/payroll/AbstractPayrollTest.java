@@ -18,7 +18,6 @@
  */
 package org.apache.fineract.cn.payroll;
 
-
 import org.apache.fineract.cn.payroll.api.v1.EventConstants;
 import org.apache.fineract.cn.payroll.api.v1.client.PayrollManager;
 import org.apache.fineract.cn.payroll.service.PayrollServiceConfiguration;
@@ -74,8 +73,7 @@ public class AbstractPayrollTest extends SuiteTestEnvironment {
 
   @ClassRule
   public final static TenantDataStoreContextTestRule tenantDataStoreContext =
-      TenantDataStoreContextTestRule.forRandomTenantName(SuiteTestEnvironment.cassandraInitializer,
-          SuiteTestEnvironment.mariaDBInitializer);
+      TenantDataStoreContextTestRule.forRandomTenantName(cassandraInitializer, postgreSQLInitializer);
 
   @Rule
   public final TenantApplicationSecurityEnvironmentTestRule tenantApplicationSecurityEnvironment
