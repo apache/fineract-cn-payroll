@@ -1,6 +1,8 @@
-# Apache Fineract CN Payroll [![Build Status](https://api.travis-ci.com/apache/fineract-cn-payroll.svg?branch=develop)](https://travis-ci.com/apache/fineract-cn-payroll)
+# Apache Fineract CN Payroll [![Build Status](https://api.travis-ci.com/apache/fineract-cn-payroll.svg?branch=develop)](https://travis-ci.com/apache/fineract-cn-payroll) [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/apache/fineract-cn-payroll)](https://hub.docker.com/r/apache/fineract-cn-payroll/builds)
 
 This project provides functionality to configure payroll allocations and distribute payroll payments for customers.
+[Read more](https://cwiki.apache.org/confluence/display/FINERACT/Fineract+CN+Project+Structure#FineractCNProjectStructure-payroll).
+
 
 ## Versioning
 The version numbers follow the [Semantic Versioning](http://semver.org/) scheme.
