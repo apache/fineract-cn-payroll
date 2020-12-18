@@ -20,8 +20,9 @@ package org.apache.fineract.cn.payroll.api.v1.domain;
 
 import java.util.List;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+
 import org.apache.fineract.cn.lang.validation.constraints.ValidIdentifier;
-import org.hibernate.validator.constraints.NotEmpty;
 
 public class PayrollCollectionSheet {
 

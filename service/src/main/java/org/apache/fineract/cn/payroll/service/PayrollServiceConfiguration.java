@@ -31,13 +31,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SuppressWarnings("WeakerAccess")
 @Configuration
@@ -63,7 +62,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableJpaRepositories({
     "org.apache.fineract.cn.payroll.service.internal.repository"
 })
-public class PayrollServiceConfiguration extends WebMvcConfigurerAdapter {
+public class PayrollServiceConfiguration implements WebMvcConfigurer {
 
   public PayrollServiceConfiguration() {
     super();
@@ -74,8 +73,4 @@ public class PayrollServiceConfiguration extends WebMvcConfigurerAdapter {
     return LoggerFactory.getLogger(ServiceConstants.LOGGER_NAME);
   }
 
-  @Override
-  public void configurePathMatch(final PathMatchConfigurer configurer) {
-    configurer.setUseSuffixPatternMatch(Boolean.FALSE);
-  }
 }
