@@ -17,7 +17,7 @@
 
 buildscript {
     ext {
-        springBootVersion = '1.4.1.RELEASE'
+        springBootVersion = '2.4.1'
     }
 
     repositories {
@@ -25,22 +25,22 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
+        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.7")
     }
 }
 
 plugins {
-    id "com.github.hierynomus.license" version "0.13.1"
-    id("org.nosphere.apache.rat") version "0.5.2"
-    id "com.jfrog.artifactory" version "4.9.5"
-    id "org.springframework.boot" version "1.4.3.RELEASE"
+    id 'com.github.hierynomus.license' version '0.15.0'
+    id 'org.nosphere.apache.rat' version '0.6.0'
+    id 'com.jfrog.artifactory' version '4.15.1'
+    id 'org.springframework.boot' version '2.4.1'
     id 'maven-publish'
     id 'java'
 }
 apply from: '../shared.gradle'
 apply plugin: 'org.asciidoctor.convert'
 
-bootRepackage {
+bootJar {
     enabled = false
 }
 
@@ -54,7 +54,7 @@ dependencies {
             [group: 'org.apache.fineract.cn', name: 'lang', version: versions.frameworklang],
             [group: 'org.springframework.boot', name: 'spring-boot-starter-test'],
             [group: 'org.springframework.restdocs', name: 'spring-restdocs-mockmvc'],
-            [group: 'junit', name: 'junit', version: '4.12']
+            [group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0']
     )
 }
 
@@ -63,6 +63,10 @@ asciidoctor {
     outputDir 'build/doc/html5'
     options backend: "html", doctype: "book"
     attributes "source-highlighter": "highlightjs", 'snippets': file('build/doc/generated-snippets/')
+}
+
+jar {
+    enabled = true
 }
 
 publishing {
