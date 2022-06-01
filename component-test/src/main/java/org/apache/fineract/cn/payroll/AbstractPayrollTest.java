@@ -54,7 +54,6 @@ public class AbstractPayrollTest extends SuiteTestEnvironment {
   @EnableFeignClients(basePackages = {
       "org.apache.fineract.cn.payroll.api.v1.client"
   })
-  @RibbonClient(name = SuiteTestEnvironment.APP_NAME)
   @ComponentScan(
       basePackages = {
           "org.apache.fineract.cn.payroll.listener"

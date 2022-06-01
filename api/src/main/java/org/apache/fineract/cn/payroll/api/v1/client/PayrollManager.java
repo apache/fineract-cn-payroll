@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @SuppressWarnings("unused")
-@FeignClient(name="payroll-v1", path="/payroll/v1", configuration = CustomFeignClientsConfiguration.class)
+@FeignClient(path="/payroll/v1", url = "http://${kubernetes.payroll.service.name}:${kubernetes.payroll.server.port}", configuration = CustomFeignClientsConfiguration.class)
 public interface PayrollManager {
 
   @RequestMapping(
